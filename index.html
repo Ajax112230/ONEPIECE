@@ -766,7 +766,7 @@ function getColor(name) {
 
     card.style.setProperty('--ink-color', c.hex);
     card.style.setProperty('--ink-glow', 'rgba('+c.r+','+c.g+','+c.b+',0.35)');
-    // 纯色背景（噪声纹理通过 CSS ::before/::after 实现，不叠加 blend-mode）
+    // 纯色背景
     card.style.backgroundImage = 'none';
     card.style.backgroundBlendMode = 'normal';
     card.style.background = c.hex;
