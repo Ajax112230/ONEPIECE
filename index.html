@@ -181,123 +181,79 @@ canvas {
   transition: background 0.8s, filter 0.8s, box-shadow 0.8s;
   filter: saturate(1.12) contrast(1.03);
   box-shadow:
-    /* 绣面微微隆起的光影 */
     0 0 0 6px rgba(255,255,255,0.015),
     0 0 0 5px rgba(0,0,0,0.04),
     0 0 0 7px rgba(255,255,255,0.01),
     0 0 0 8px rgba(0,0,0,0.03),
     0 0 0 10px rgba(255,255,255,0.01),
-    /* 外光晕 */
     0 0 50px var(--ink-glow, rgba(201,169,110,0.2)),
     0 0 100px var(--ink-glow, rgba(201,169,110,0.08)),
-    /* 绣绷投影 */
     10px 8px 30px rgba(0,0,0,0.2),
     -6px -4px 20px rgba(0,0,0,0.1);
 }
 
-/* 底层：绢帛底纹 — 极细经纬交织 */
+/* 中层：绣线纹理 + 丝光 */
 #color-card::before {
   content: '';
   position: absolute; inset: 0;
   border-radius: 50%;
   background:
-    /* 经线 */
-    repeating-linear-gradient(
-      0deg,
+    /* 主绣线 — 排针, 丝线高亮面 */
+    repeating-linear-gradient(15deg,
       transparent 0px,
-      transparent 1px,
-      rgba(255,255,255,0.018) 1px,
-      rgba(255,255,255,0.018) 1.5px
-    ),
-    /* 纬线 */
-    repeating-linear-gradient(
-      90deg,
+      transparent 1.8px,
+      rgba(255,255,255,0.05) 1.8px,
+      rgba(255,255,255,0.05) 2.2px),
+    /* 绣线暗面 */
+    repeating-linear-gradient(15deg,
       transparent 0px,
-      transparent 1px,
-      rgba(0,0,0,0.012) 1px,
-      rgba(0,0,0,0.012) 1.5px
-    ),
-    /* 微织纹 — 斜纹 */
-    repeating-linear-gradient(
-      30deg,
+      transparent 1.8px,
+      rgba(0,0,0,0.06) 2.2px,
+      rgba(0,0,0,0.06) 2.6px),
+    /* 反方向细线 — 交叉线迹 */
+    repeating-linear-gradient(-12deg,
       transparent 0px,
-      transparent 8px,
-      rgba(255,255,255,0.008) 8px,
-      rgba(255,255,255,0.008) 8.5px
-    ),
-    /* 微织纹 — 反向 */
-    repeating-linear-gradient(
-      150deg,
-      transparent 0px,
-      transparent 12px,
-      rgba(0,0,0,0.008) 12px,
-      rgba(0,0,0,0.008) 12.5px
-    ),
-    /* 丝光底色渐变 */
-    linear-gradient(
-      135deg,
+      transparent 5px,
+      rgba(255,255,255,0.02) 5px,
+      rgba(255,255,255,0.02) 5.4px),
+    /* 丝光渐变 */
+    linear-gradient(140deg,
+      rgba(255,255,255,0.16) 0%,
+      rgba(255,255,255,0.06) 20%,
+      transparent 42%,
+      rgba(0,0,0,0.05) 62%,
+      rgba(0,0,0,0.12) 100%),
+    /* 柔光 */
+    radial-gradient(ellipse 50% 40% at 35% 25%,
       rgba(255,255,255,0.10) 0%,
-      rgba(255,255,255,0.03) 25%,
-      transparent 45%,
-      rgba(0,0,0,0.02) 55%,
-      rgba(0,0,0,0.06) 85%,
-      rgba(255,255,255,0.02) 100%
-    );
+      transparent 65%);
   pointer-events: none;
 }
 
-/* 中层：绣线纹理 — 密实 satin stitch */
+/* 顶层：织物微结构 */
 #color-card::after {
   content: '';
   position: absolute; inset: 0;
   border-radius: 50%;
   background:
-    /* 主针迹 — 细密 15° 斜纹绣线 */
-    repeating-linear-gradient(
-      15deg,
+    /* 经线 — 极细 */
+    repeating-linear-gradient(0deg,
       transparent 0px,
-      transparent 1.5px,
-      rgba(255,255,255,0.035) 1.5px,
-      rgba(255,255,255,0.035) 2px
-    ),
-    /* 副针迹 — 20° 微偏移叠加，模拟丝线交错深浅 */
-    repeating-linear-gradient(
-      20deg,
+      transparent 0.6px,
+      rgba(255,255,255,0.015) 0.6px,
+      rgba(255,255,255,0.015) 1px),
+    /* 纬线 */
+    repeating-linear-gradient(90deg,
       transparent 0px,
-      transparent 0.8px,
-      rgba(255,255,255,0.018) 0.8px,
-      rgba(255,255,255,0.018) 1.2px
-    ),
-    /* 绣线起伏暗纹 */
-    repeating-linear-gradient(
-      15deg,
-      transparent 0px,
-      transparent 4px,
-      rgba(0,0,0,0.04) 4px,
-      rgba(0,0,0,0.04) 4.5px
-    ),
-    /* 丝线高光带 — 左上到右下 */
-    linear-gradient(
-      150deg,
-      rgba(255,255,255,0.18) 0%,
-      rgba(255,255,255,0.10) 15%,
-      rgba(255,255,255,0.02) 35%,
-      transparent 50%,
-      rgba(0,0,0,0.04) 65%,
-      rgba(0,0,0,0.10) 100%
-    ),
-    /* 第二高光 — 柔光漫反射 */
-    radial-gradient(
-      ellipse 50% 40% at 35% 30%,
-      rgba(255,255,255,0.08) 0%,
-      transparent 70%
-    );
+      transparent 0.6px,
+      rgba(0,0,0,0.012) 0.6px,
+      rgba(0,0,0,0.012) 1px),
+    /* 漫反射微调 */
+    radial-gradient(ellipse 55% 45% at 60% 65%,
+      rgba(0,0,0,0.06) 0%,
+      transparent 60%);
   pointer-events: none;
-}
-
-/* 针脚纹路叠加层 — 用内嵌 box-shadow 画锁边 */
-#color-card .stitch-border {
-  display: none;
+  /* 织物噪点通过 Canvas 纹理注入 */
 }
 
 /* Color info */
@@ -792,6 +748,24 @@ function getColor(name) {
   };
 })();
 
+// === CANVAS NOISE TEXTURE for embroidery ===
+(function(){
+  var noiseDataURL = '';
+  var noiseCanvas = document.createElement('canvas');
+  noiseCanvas.width = 128; noiseCanvas.height = 128;
+  var nctx = noiseCanvas.getContext('2d');
+  var imgData = nctx.createImageData(128, 128);
+  var d = imgData.data;
+  for (var i = 0; i < d.length; i += 4) {
+    var v = Math.random() * 18 - 9; // -9 to +9
+    d[i] = v; d[i+1] = v; d[i+2] = v; d[i+3] = 255;
+  }
+  nctx.putImageData(imgData, 0, 0);
+  noiseDataURL = noiseCanvas.toDataURL('image/png');
+
+  window.getNoiseTexture = function() { return noiseDataURL; };
+})();
+
 // === MAIN ===
 (function(){
   var scrIn = document.getElementById('input-screen');
@@ -811,6 +785,9 @@ function getColor(name) {
 
     card.style.setProperty('--ink-color', c.hex);
     card.style.setProperty('--ink-glow', 'rgba('+c.r+','+c.g+','+c.b+',0.35)');
+    // 织物噪声纹理叠加（background-blend-mode: overlay）
+    card.style.backgroundImage = 'url(' + getNoiseTexture() + '), linear-gradient(' + c.hex + ', ' + c.hex + ')';
+    card.style.backgroundBlendMode = 'overlay, normal';
     cname.textContent = c.name;
     chex.textContent = c.hex;
     crgb.textContent = 'RGB('+c.r+', '+c.g+', '+c.b+')';
