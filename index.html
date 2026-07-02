@@ -158,16 +158,6 @@ canvas {
   background-repeat: no-repeat;
   animation: paperFadeIn 0.8s ease;
 }
-/* Subtle dark overlay — keeps text readable on any background image */
-#result-screen::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.45);
-  pointer-events: none;
-  z-index: -1;
-}
-
 /* Override text colors for image-background mode */
 #color-name { color: #f0e6d3; }
 #color-hex, #color-rgb { color: #d5cbb5; }
