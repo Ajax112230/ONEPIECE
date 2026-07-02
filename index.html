@@ -38,13 +38,15 @@ body {
 #galaxy-bg {
   position: fixed;
   top: 0; left: 0;
-  width: 100%; height: 100%;
+  width: 100vw; height: 100vh;
+  width: 100dvw; height: 100dvh;
   z-index: 0;
 }
 #galaxy-bg canvas {
   display: block;
-  width: 100%;
-  height: 100%;
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
 }
 
 /* ═══════════════════════════════════════════
@@ -763,10 +765,9 @@ function getColor(name) {
 })();
 </script>
 
-<!-- Galaxy WebGL background -->
 <script src="js/galaxy.js"></script>
 <script>
-(function(){
+window.addEventListener('DOMContentLoaded', function() {
   var ctn = document.getElementById('galaxy-bg');
   if (ctn && window.initGalaxy) {
     window.initGalaxy(ctn, {
@@ -783,7 +784,7 @@ function getColor(name) {
       transparent: true,
     });
   }
-})();
+});
 </script>
 </body>
 </html>

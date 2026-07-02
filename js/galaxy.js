@@ -181,6 +181,9 @@ function createProgram(gl, vsSrc, fsSrc) {
   const p = gl.createProgram();
   gl.attachShader(p, createShader(gl, gl.VERTEX_SHADER, vsSrc));
   gl.attachShader(p, createShader(gl, gl.FRAGMENT_SHADER, fsSrc));
+  // 绑定 attribute location，确保 position=0, uv=1
+  gl.bindAttribLocation(p, 0, 'position');
+  gl.bindAttribLocation(p, 1, 'uv');
   gl.linkProgram(p);
   if (!gl.getProgramParameter(p, gl.LINK_STATUS)) {
     console.warn('Link error:', gl.getProgramInfoLog(p));
@@ -189,21 +192,29 @@ function createProgram(gl, vsSrc, fsSrc) {
 }
 
 // full-screen triangle (covers clip space without a VBO)
-function drawFullScreenTriangle(gl) {
-  // Only 3 verts needed for fullscreen tri in clip space
-  const buf = gl.createBuffer();
-  gl.bindBuffer(gl.ARRAY_BUFFER, buf);
-  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
-    -1, -1,  0, 0,
-     3, -1,  2, 0,
-    -1,  3,  0, 2,
-  ]), gl.STATIC_DRAW);
+// buffer 只在初始化时创建一次
+var _screenBuf = null;
+function drawFullScreenTriangle(gl, program) {
+  if (!_screenBuf) {
+    _screenBuf = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, _screenBuf);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
+      -1, -1,  0, 0,
+       3, -1,  2, 0,
+      -1,  3,  0, 2,
+    ]), gl.STATIC_DRAW);
+  } else {
+    gl.bindBuffer(gl.ARRAY_BUFFER, _screenBuf);
+  }
 
-  const stride = 4 * 4; // 4 floats × 4 bytes
-  gl.enableVertexAttribArray(0); // position
-  gl.vertexAttribPointer(0, 2, gl.FLOAT, false, stride, 0);
-  gl.enableVertexAttribArray(1); // uv
-  gl.vertexAttribPointer(1, 2, gl.FLOAT, false, stride, 8);
+  var posLoc = gl.getAttribLocation(program, 'position');
+  var uvLoc  = gl.getAttribLocation(program, 'uv');
+  var stride = 4 * 4;
+
+  gl.enableVertexAttribArray(posLoc);
+  gl.vertexAttribPointer(posLoc, 2, gl.FLOAT, false, stride, 0);
+  gl.enableVertexAttribArray(uvLoc);
+  gl.vertexAttribPointer(uvLoc, 2, gl.FLOAT, false, stride, 8);
 
   gl.drawArrays(gl.TRIANGLES, 0, 3);
 }
@@ -273,15 +284,18 @@ global.initGalaxy = function(container, opts) {
   }
 
   function resize() {
-    var w = container.offsetWidth;
-    var h = container.offsetHeight;
+    var w = container.offsetWidth  || window.innerWidth;
+    var h = container.offsetHeight || window.innerHeight;
+    if (w === 0 || h === 0) { w = window.innerWidth; h = window.innerHeight; }
     canvas.width = w;
     canvas.height = h;
     gl.viewport(0, 0, w, h);
     gl.uniform3f(u.uResolution, w, h, w / h);
   }
   window.addEventListener('resize', resize);
-  resize();
+  // 延迟确保 layout 完成 + DOM ready
+  setTimeout(resize, 50);
+  setTimeout(resize, 300);
 
   // Set static uniforms
   gl.uniform2fv(u.uFocal, new Float32Array(o.focal));
@@ -341,7 +355,7 @@ global.initGalaxy = function(container, opts) {
     gl.uniform1f(u.uMouseActiveFactor, smoothActive);
 
     gl.clear(gl.COLOR_BUFFER_BIT);
-    drawFullScreenTriangle(gl);
+    drawFullScreenTriangle(gl, program);
   }
   animId = requestAnimationFrame(update);
 
